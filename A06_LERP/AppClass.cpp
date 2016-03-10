@@ -14,6 +14,30 @@ void AppClass::InitVariables(void)
 	m_pMeshMngr->LoadModel("Sorted\\WallEye.bto", "WallEye");
 
 	fDuration = 1.0f;
+
+	/*list of locations to define movement of sprite*/
+	waypoints = new vector3[m_nObjects];
+	waypoints[0] = vector3(-4.0f, -2.0f, 5.0f);
+	waypoints[1] = vector3(1.0f, -2.0f, 5.0f);
+	waypoints[2] = vector3(-3.0f, -1.0f, 3.0f);
+	waypoints[3] = vector3(2.0f, -1.0f, 3.0f);
+	waypoints[4] = vector3(-2.0f, 0.0f, 0.0f);
+	waypoints[5] = vector3(3.0f, 0.0f, 0.0f);
+	waypoints[6] = vector3(-1.0f, 1.0f, -3.0f);
+	waypoints[7] = vector3(4.0f, 1.0f, -3.0f);
+	waypoints[8] = vector3(0.0f, 2.0f, -5.0f);
+	waypoints[9] = vector3(5.0f, 2.0f, -5.0f);
+	waypoints[10] = vector3(1.0f, 3.0f, -5.0f);
+
+	m_nObjects = 11;
+	m_pSphere = new PrimitiveClass[m_nObjects];
+	m_pMatrix = new matrix4[m_nObjects];
+
+	/**/
+	for (uint i = 0; i < m_nObjects; i++) {
+		m_pSphere[i].GenerateSphere(0.5f,5,RERED);
+		m_pMatrix[i] = glm::translate(waypoints[i]);
+	}
 }
 
 void AppClass::Update(void)
@@ -24,7 +48,7 @@ void AppClass::Update(void)
 
 	//Update the mesh manager's time without updating for collision detection
 	m_pMeshMngr->Update();
-#pragma region
+#pragma endregion
 
 #pragma region Does not need changes but feel free to change anything here
 	//Lets us know how much time has passed since the last call
@@ -36,7 +60,11 @@ void AppClass::Update(void)
 #pragma endregion
 
 #pragma region Your Code goes here
-	m_pMeshMngr->SetModelMatrix(IDENTITY_M4, "WallEye");
+	m_pMeshMngr->SetModelMatrix(IDENTITY_M4/*insert your matrix here*/, "WallEye");
+
+	//vector3 v3Current = glm::lerp(v3Start, v3End, fPercent);
+
+
 #pragma endregion
 
 #pragma region Does not need changes but feel free to change anything here
@@ -75,6 +103,11 @@ void AppClass::Display(void)
 		break;
 	}
 	
+	/**/
+	for (uint i = 0; i < m_nObjects; i++) {
+		m_pSphere[i].Render();
+	}
+
 	m_pMeshMngr->Render(); //renders the render list
 
 	m_pGLSystem->GLSwapBuffers(); //Swaps the OpenGL buffers
@@ -82,5 +115,20 @@ void AppClass::Display(void)
 
 void AppClass::Release(void)
 {
+	/*delete the array*/
+	if (waypoints != nullptr) {
+		delete[] waypoints;
+		waypoints = nullptr;
+	}
+	if (m_pSphere != nullptr) {
+		delete[] m_pSphere; //"new[]" corresponds to "delete[]", "new()" corresponds to "delete"
+		m_pSphere = nullptr;
+	}
+
+	if (m_pMatrix != nullptr) {
+		delete[] m_pMatrix; //"new[]" corresponds to "delete[]", "new()" corresponds to "delete"
+		m_pMatrix = nullptr;
+	}
+
 	super::Release(); //release the memory of the inherited fields
 }

@@ -13,6 +13,15 @@ using namespace ReEng; //Using ReEng namespace to use all the classes in the dll
 class AppClass : public ReEngAppClass
 {
 	float fDuration = 1.0f; //Time Duration of the stops
+
+	/*array to hold the points*/
+	vector3* waypoints = nullptr;
+
+	int m_nObjects = 11;
+	PrimitiveClass* m_pSphere = nullptr;
+	matrix4* m_pMatrix = nullptr;
+
+
 public:
 	typedef ReEngAppClass super;
 	/*
