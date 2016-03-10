@@ -21,6 +21,21 @@ class AppClass : public ReEngAppClass
 	PrimitiveClass* m_pSphere = nullptr;
 	matrix4* m_pMatrix = nullptr;
 
+	matrix4 modelMat4 = IDENTITY_M4;
+	vector3 v3current;
+	bool flag0;
+	bool flag1;
+	bool flag2;
+	bool flag3;
+	bool flag4;
+	bool flag5;
+	bool flag6;
+	bool flag7;
+	bool flag8;
+	bool flag9;
+	bool flag10;
+	int numRounds;
+
 
 public:
 	typedef ReEngAppClass super;
