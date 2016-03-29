@@ -1,7 +1,7 @@
 #include "AppClass.h"
 void AppClass::InitWindow(String a_sWindowName)
 {
-	super::InitWindow("SLERP - YOUR USER NAME GOES HERE"); // Window Name
+	super::InitWindow("SLERP - JustinJohn"); // Window Name
 
 	//Setting the color to black
 	m_v4ClearColor = vector4(0.0f);
@@ -10,7 +10,7 @@ void AppClass::InitWindow(String a_sWindowName)
 void AppClass::InitVariables(void)
 {
 	//Setting the position in which the camera is looking and its interest point
-	m_pCameraMngr->SetPositionTargetAndView(vector3(12.12f, 28.52f, 11.34f), ZERO_V3, REAXISY);
+	m_pCameraMngr->SetPositionTargetAndView(vector3(0.0f, 0.0f, 50.0f), ZERO_V3, REAXISY);
 
 	//Setting the color to black
 	m_v4ClearColor = vector4(0.0f);
@@ -41,16 +41,79 @@ void AppClass::Update(void)
 	//Counting the cumulative time
 	static double fRunTime = 0.0f;
 	fRunTime += fCallTime;
+	static double fWorkTime = 0.0f;
+	fWorkTime += fCallTime*10;
+	static bool backAround = false;
+	if (fWorkTime >= 182.5) {
+		fWorkTime = 0;
+		if (backAround == false) {
+			backAround = true;
+		}
+		else if (backAround == true) {
+			backAround = false;
+		}
+	}
 
 	//Earth Orbit
 	double fEarthHalfOrbTime = 182.5f * m_fDay; //Earths orbit around the sun lasts 365 days / half the time for 2 stops
 	float fEarthHalfRevTime = 0.5f * m_fDay; // Move for Half a day
 	float fMoonHalfOrbTime = 14.0f * m_fDay; //Moon's orbit is 28 earth days, so half the time for half a route
 
+	float fpercent = MapValue(static_cast<float>(fWorkTime), 0.0f, static_cast<float>(fEarthHalfOrbTime), 0.0f, 1.0f);
+
+	//This matrices will hold the relative transformation of the Moon and the Earth
+	matrix4 distanceEarth = glm::translate(11.0f, 0.0f, 0.0f);
+	matrix4 distanceMoon = glm::translate(2.0f, 0.0f, 0.0f);
+
+	glm::quat earthStart = glm::angleAxis(0.0f, vector3(1.0f, 1.0f, 1.0f));
+	glm::quat earthEnd = glm::angleAxis(180.0f, vector3(1.0f, 1.0f, 1.0f));
+	glm::quat earthCurrent;
+	if (backAround == false) {
+		earthCurrent = glm::mix(earthStart, earthEnd, fpercent);
+	}
+	else if (backAround == true) {
+		earthCurrent = glm::mix(earthEnd, earthStart, fpercent);
+	}
+	matrix4 m4earthRotato = glm::mat4_cast(earthCurrent);
+
+	glm::quat moonStart =  glm::angleAxis(0.0f, vector3(1.0f, 1.0f, 1.0f));
+	glm::quat moonEnd = glm::angleAxis(180.0f, vector3(1.0f, 1.0f, 1.0f));
+	glm::quat moonCurrent;
+	if (backAround == false) {
+		moonCurrent = glm::mix(moonStart, moonEnd, fpercent);
+	}
+	else if (backAround == true) {
+		moonCurrent = glm::mix(moonEnd, moonStart, fpercent);
+	}
+	matrix4 m4moonRotato = glm::mat4_cast(moonCurrent);
+	//matrix4 m4earthRotato = glm::mat4_cast(glm::mix(earthStart, earthEnd, 0.5f));
+
+
+
+	//matrix4 m_m4Earth = glm::rotate(IDENTITY_M4, static_cast<float>(fEarthHalfOrbTime), vector3(0.0f, 1.0f, 0.0f)) * distanceEarth;
+	//glm::rotate(IDENTITY_M4, m4earthRotato, vector3(0.0f, 1.0f, 0.0f))
+	matrix4 m_m4Earth = m4earthRotato * distanceEarth * glm::scale(0.524f, 0.524f, 0.524f);
+	//matrix4 m_m4Moon = glm::rotate(m_m4Earth, static_cast<float>(fEarthHalfOrbTime), vector3(0.0f, 1.0f, 0.0f)) * distanceMoon;
+	matrix4 m_m4Moon = m4moonRotato * distanceEarth * distanceMoon * glm::scale(0.524f, 0.524f, 0.524f) * glm::scale(0.27f, 0.27f, 0.27f);
+
+	matrix4 m_m4Sun = glm::scale(5.936f, 5.936f, 5.936f);
+
 	//Setting the matrices
-	m_pMeshMngr->SetModelMatrix(IDENTITY_M4, "Sun");
-	m_pMeshMngr->SetModelMatrix(IDENTITY_M4, "Earth");
-	m_pMeshMngr->SetModelMatrix(IDENTITY_M4, "Moon");
+	m_pMeshMngr->SetModelMatrix(m_m4Sun, "Sun");
+	m_pMeshMngr->SetModelMatrix(m_m4Earth, "Earth");
+	m_pMeshMngr->SetModelMatrix(m_m4Moon, "Moon");
+
+
+	/*quaternion qQuaternion1;
+	m_m4Steve = ToMatrix4(qQuaternion1);*/
+	/*
+	glm::quat qQuaternion1;
+	glm::quat qQuaternion2 = glm::angleAxis(180.0f, vector3(1.0f, 1.0f, 1.0f));
+	m_m4Steve = glm::mat4_cast(glm::mix(qQuaternion1, qQuaternion2, fPercent)); 
+	//glm::mix IS slerp, glm::slerp is not slerp, DO NOT USE GLM::SLERP
+	*/
+
+	//m_fDay += 0.001f;
 
 	//Adds all loaded instance to the render list
 	m_pMeshMngr->AddInstanceToRenderList("ALL");

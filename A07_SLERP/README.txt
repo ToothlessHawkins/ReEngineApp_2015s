@@ -1,0 +1,5 @@
+This one got kinda tricky on me.
+I tried to use A05 as a starter, or at least a reference, but I'm pretty sure this is clsoer to LERP than that. I ended up attempting to draw upon both resources.
+My models are acting very, very strangely. They start out fine, then seem to stretch and fly off course, before hitting the waypoint and coming back. The goal was to make them orbit and the make them revolve, but I got hung up with the stretching, so I never make them fly all the way around the sun or revolve around themselves. They're positioned and scaled properly, at least. If I remember correctly, I believe Alberto mentioned that the stretching would be an issue we would encounter, as would have to overcome. I definitely encountered it, so at least I was moving in the right direction. Unfortunately, I was promptly defeated by it. 
+
+Justin John
