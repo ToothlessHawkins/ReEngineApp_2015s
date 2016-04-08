@@ -16,7 +16,11 @@ class AppClass : public ReEngAppClass
 public:
 	typedef ReEngAppClass super;
 	PrimitiveClass* m_pCone = nullptr;
+	PrimitiveClass* m_pCube = nullptr;
 	vector3 m_v3Target = vector3(0.0f, 0.0f, 0.0f);
+
+	MyCamera* myCam; // a handle for the camera
+
 	/*
 	USAGE: Constructor
 	ARGUMENTS: 
