@@ -58,11 +58,25 @@ public:
 
 	void MyCamera::MoveVertical(float fIncrement);
 
+
+	//I used the following as a reference to get these methods to work 
+	//https://www.reddit.com/r/opengl/comments/2k8tj6/my_quaternionbased_camera_is_moving_relative_to/clj1utw
 	void MyCamera::ChangePitch(float fIncrement);
 
 	void MyCamera::ChangeRoll(float fIncrement);
 
 	void MyCamera::ChangeYaw(float fIncrement);
+
+	//utility functions for quaternions
+	void rotate(float fIncrement, glm::vec3 axis) {
+		glm::quat qRotate = glm::angleAxis(fIncrement, axis);
+		rotate(qRotate);
+	}
+
+	void rotate(glm::quat qRotate) {
+		quaternerizor = qRotate * quaternerizor;
+	}
+
 
 private:
 	MyCamera() {} // constructor

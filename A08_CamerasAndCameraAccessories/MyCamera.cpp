@@ -78,6 +78,19 @@ void MyCamera::MoveVertical(float fIncrement)
 {
 	camPosition += camUp * fIncrement;
 }
+
+void MyCamera::ChangePitch(float fIncrement) {
+	rotate(fIncrement, glm::vec3(1.0f, 0.0f, 0.0f));
+}
+
+void  MyCamera::ChangeYaw(float fIncrement) {
+	rotate(fIncrement, glm::vec3(0.0f, 1.0f, 0.0f));
+}
+
+void  MyCamera::ChangeRoll(float fIncrement) {
+	rotate(fIncrement, glm::vec3(0.0f, 0.0f, 1.0f));
+}
+
 /*
 //change camera pitch
 void MyCamera::ChangePitch(float fIncrement)
@@ -118,3 +131,4 @@ void MyCamera::ChangeYaw(float fIncrement)
 	camPosition += glm::mat4_cast(qQuaternion2);
 }
 */
+
