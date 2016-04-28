@@ -216,8 +216,8 @@ void AppClass::Display(void)
 {
 	//clear the screen
 	ClearScreen();
-
 	//Render the grid based on the camera's mode:
+<<<<<<< HEAD
 	switch (m_pCameraMngr->GetCameraMode())
 	{
 	default: //Perspective
@@ -242,8 +242,11 @@ void AppClass::Display(void)
 		//in theory it's right, so maybe if you uncomment 
 	};
 
+=======
+	m_pMeshMngr->AddGridToRenderListBasedOnCamera(m_pCameraMngr->GetCameraMode());
+>>>>>>> 00680e2f8635d9f9f2a635f595b7b37a88d4d800
 	m_pMeshMngr->Render(); //renders the render list
-
+	m_pMeshMngr->ResetRenderList(); //Reset the Render list after render
 	m_pGLSystem->GLSwapBuffers(); //Swaps the OpenGL buffers
 }
 
